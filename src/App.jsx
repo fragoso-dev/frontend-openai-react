@@ -3,19 +3,21 @@ import { useState } from 'react'
 import './App.css'
 import './global.css'
 
+import axios from "axios"
+
 export function App() {
 
   const [prompt, setPrompt] = useState('');
   const [resposta, setResposta] = useState('');
   const [carregando, setCarregando] = useState(false);
 
-  const handleSubmit = async(hS) =>{
+  const handleSubmit = async (hS) =>{
     hS.preventDefault();
     setCarregando(true);
     setResposta('');
 
     try {
-      const res = await axios.post('https://localhost:4000', {prompt});
+      const res = await axios.post('http://localhost:4000/gerar-texto', {prompt});
       setResposta(res.data.resposta);
     } catch (error) {
       setResposta('Deu ruim, erro ao obter resposta da OpenAI')
@@ -28,8 +30,9 @@ export function App() {
     <div className='container'>
       <h1 className='title' >Gerador de texto - Jarbas</h1>
 
-      <form onSubmit={handleSubmit}>
+      <form className='form-content' onSubmit={handleSubmit}>
         <textarea 
+          className='textResposta'
           placeholder="Como posso ajudar?" 
           value={prompt} 
           onChange={(hS) => setPrompt(hS.target.value)}
@@ -44,7 +47,7 @@ export function App() {
       {resposta && (
         <div className='resposta'>
           <h2>Resposta</h2>
-          <p>Resposta</p>
+          <p>{resposta}</p>
         </div>
       )}
     </div>
